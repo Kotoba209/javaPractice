@@ -1,5 +1,7 @@
 package com.example.demo1.interceptor;
 
+import com.example.demo1.pojo.Result;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -14,8 +16,10 @@ public class LoginInterceptor implements HandlerInterceptor {
         Object loginUser = session.getAttribute("loginUser");
 
         if (loginUser == null) {
-            response.setContentType("text/html;charset=UTF-8");
-            response.getWriter().write("未登录，请先登录");
+            response.setContentType("application/json;charset=UTF-8");
+            Result<Void> result = Result.fail(401, "未登录，请先登录");
+            ObjectMapper objectMapper = new ObjectMapper();
+            response.getWriter().write(objectMapper.writeValueAsString(result));
             return false;
         }
         return true;

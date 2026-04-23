@@ -42,12 +42,14 @@ public class UserController {
         User updateUser = userService.getById(user.getId());
         updateUser.setUsername(user.getUsername());
         updateUser.setNickname(user.getNickname());
+        userService.updateUser(updateUser);
         return Result.success(updateUser);
     }
 
     @DeleteMapping("/{id}")
     public Result<User> deleteUser(@PathVariable @Validated Integer id) {
         User deleteUser = userService.getById(id);
+        userService.deleteUser(id);
         return Result.success(deleteUser);
     }
     @GetMapping("/testException")

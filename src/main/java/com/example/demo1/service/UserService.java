@@ -15,7 +15,9 @@ public interface UserService {
 
     void deleteUser(Integer id);
 
-    PageResult< User> page(Integer pageNum, Integer pageSize, String username);
+    PageResult< User> page(Integer pageNum, Integer pageSize, String username, String nickname, String sort);
+
+    User getByUsername(String username);
 }
 
 

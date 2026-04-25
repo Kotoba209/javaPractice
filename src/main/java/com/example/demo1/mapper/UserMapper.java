@@ -16,6 +16,9 @@ public interface UserMapper {
     @Select("select id, username, nickname from user where id=#{id}")
     User findById(Integer  id);
 
+    @Select("select id, username, nickname from user where username=#{username}")
+    User findUserByName(String username);
+
     @Insert("insert into user(username, nickname) values(#{username}, #{nickname})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     int insert(User user);
@@ -33,10 +36,13 @@ public interface UserMapper {
             "   <if test='username != null and username != \"\"'>",
             "       username like concat('%', #{username}, '%')",
             "   </if>",
+            "   <if test='nickname != null and nickname != \"\"'>",
+            "       nickname like concat('%', #{nickname}, '%')",
+            "   </if>",
             "</where>",
             "</script>"
     })
-    Long count(@Param("username") String username);
+    Long count(@Param("username") String username, @Param("nickname") String nickname);
     @Select({
             "<script>",
             "select id, username, nickname from user",
@@ -44,14 +50,19 @@ public interface UserMapper {
             "   <if test='username != null and username != \"\"'>",
             "       username like concat('%', #{username}, '%')",
             "   </if>",
+            "   <if test='nickname != null and nickname != \"\"'>",
+            "       nickname like concat('%', #{nickname}, '%')",
+            "   </if>",
             "</where>",
-            "order by id",
+            "order by id ${sort}",
             "limit #{offset}, #{pageSize}",
             "</script>"
     })
     List<User> page(
             @Param("offset") Integer offset,
             @Param("pageSize") Integer pageSize,
-            @Param("username") String username
+            @Param("username") String username,
+            @Param("nickname") String nickname,
+            @Param("sort") String sort
     );
 }

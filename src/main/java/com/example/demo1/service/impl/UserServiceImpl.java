@@ -1,4 +1,6 @@
 package com.example.demo1.service.impl;
+
+import com.example.demo1.exception.BusinessException;
 import com.example.demo1.mapper.UserMapper;
 import com.example.demo1.pojo.PageResult;
 import com.example.demo1.pojo.User;
@@ -22,31 +24,62 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getById(Integer id) {
-        return userMapper.findById(id);
+        User user = userMapper.findById(id);
+        if (user == null) {
+            throw new BusinessException("用户不存在");
+        }
+        return user;
     }
 
     @Override
     public User addUser(User user) {
+        User existUser = userMapper.findUserByName(user.getUsername());
+        if (existUser != null) {
+            throw new BusinessException("用户名已存在");
+        }
         userMapper.insert(user);
         return user;
     }
 
     @Override
     public User updateUser(User user) {
-        userMapper.updateById(user);
-        return user;
+        User dbdUser = userMapper.findById(user.getId());
+        if (dbdUser == null) {
+            throw new BusinessException("用户不存在");
+        }
+        User existUser = userMapper.findUserByName(user.getUsername());
+        if (existUser != null && !dbdUser.getId().equals(user.getId())) {
+            throw new BusinessException("用户名已存在");
+
+        }
+        dbdUser.setUsername(user.getUsername());
+        dbdUser.setNickname(user.getNickname());
+        userMapper.updateById(dbdUser);
+        return dbdUser;
     }
 
     @Override
     public void deleteUser(Integer id) {
+        User dbdUser = userMapper.findById(id);
+        if (dbdUser == null) {
+            throw new BusinessException("用户不存在");
+        }
         userMapper.deleteById(id);
     }
 
     @Override
-    public PageResult<User> page(Integer pageNum, Integer pageSize, String username) {
+    public PageResult<User> page(Integer pageNum, Integer pageSize, String username, String nickname, String sort) {
+        if (!sort.equalsIgnoreCase("desc") && !sort.equalsIgnoreCase("asc")) {
+            throw new BusinessException("排序参数只能是 asc 或 desc");
+        }
         Integer offset = (pageNum - 1) * pageSize;
-        long total = userMapper.count(username);
-        List<User> items = userMapper.page(offset, pageSize, username);
+        long total = userMapper.count(username, nickname);
+        List<User> items = userMapper.page(offset, pageSize, username, nickname, sort);
         return new PageResult<>(total, items);
+    }
+
+    @Override
+    public User getByUsername(String username) {
+        return userMapper.findUserByName(username);
     }
 }

@@ -43,6 +43,16 @@ public class GlobalExceptionHandler {
         return Result.fail(400, "Request binding failed: " + e.getMessage());
     }
 
+//    @ExceptionHandler(RuntimeException.class)
+//    public Result<Void> handleRuntimeException(RuntimeException e) {
+//        return Result.fail(400, e.getMessage());
+//    }
+
+    @ExceptionHandler(BusinessException.class)
+    public Result<Void> handleBusinessException(BusinessException e) {
+        return Result.fail(400, e.getMessage());
+    }
+
     @ExceptionHandler(Exception.class)
     public Result<Void> handleException(Exception e) {
         e.printStackTrace();

@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
     public User getById(Integer id) {
         User user = userMapper.findById(id);
         if (user == null) {
-            throw new BusinessException("用户不存在");
+            throw new BusinessException("鐢ㄦ埛涓嶅瓨鍦?);
         }
         return user;
     }
@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
     public User addUser(User user) {
         User existUser = userMapper.findUserByName(user.getUsername());
         if (existUser != null) {
-            throw new BusinessException("用户名已存在");
+            throw new BusinessException("鐢ㄦ埛鍚嶅凡瀛樺湪");
         }
         userMapper.insert(user);
         return user;
@@ -45,11 +45,11 @@ public class UserServiceImpl implements UserService {
     public User updateUser(User user) {
         User dbdUser = userMapper.findById(user.getId());
         if (dbdUser == null) {
-            throw new BusinessException("用户不存在");
+            throw new BusinessException("鐢ㄦ埛涓嶅瓨鍦?);
         }
         User existUser = userMapper.findUserByName(user.getUsername());
-        if (existUser != null && !dbdUser.getId().equals(user.getId())) {
-            throw new BusinessException("用户名已存在");
+        if (existUser != null && !existUser.getId().equals(user.getId())) {
+            throw new BusinessException("鐢ㄦ埛鍚嶅凡瀛樺湪");
 
         }
         dbdUser.setUsername(user.getUsername());
@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Integer id) {
         User dbdUser = userMapper.findById(id);
         if (dbdUser == null) {
-            throw new BusinessException("用户不存在");
+            throw new BusinessException("鐢ㄦ埛涓嶅瓨鍦?);
         }
         userMapper.deleteById(id);
     }
@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public PageResult<User> page(Integer pageNum, Integer pageSize, String username, String nickname, String sort) {
         if (!sort.equalsIgnoreCase("desc") && !sort.equalsIgnoreCase("asc")) {
-            throw new BusinessException("排序参数只能是 asc 或 desc");
+            throw new BusinessException("鎺掑簭鍙傛暟鍙兘鏄?asc 鎴?desc");
         }
         Integer offset = (pageNum - 1) * pageSize;
         long total = userMapper.count(username, nickname);
@@ -81,5 +81,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getByUsername(String username) {
         return userMapper.findUserByName(username);
+    }
+
+    @Override
+    public String getPasswordByUsername(String username) {
+        return userMapper.getPasswordByUsername(username);
     }
 }

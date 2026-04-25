@@ -75,7 +75,7 @@ public class UserController {
             @RequestParam(required = false) String nickname,
             @RequestParam(required = false, defaultValue = "asc") String sort) {
         System.out.println("nickname = " + nickname);
-        
+
         PageResult<User> pageResult = userService.page(pageNum, pageSize, username, nickname, sort);
         return Result.success(pageResult);
     }

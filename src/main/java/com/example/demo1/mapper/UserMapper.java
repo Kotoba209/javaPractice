@@ -65,4 +65,7 @@ public interface UserMapper {
             @Param("nickname") String nickname,
             @Param("sort") String sort
     );
+
+    @Select("select password from user where username = #{username}")
+    String getPasswordByUsername(String username);
 }

@@ -1,5 +1,7 @@
 package com.example.demo1.controller;
 
+//import com.example.demo1.mapper.UserMapper;
+import com.example.demo1.pojo.PageResult;
 import com.example.demo1.pojo.Result;
 import com.example.demo1.pojo.User;
 import com.example.demo1.service.UserService;
@@ -18,6 +20,8 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
+//    @Autowired
+//    private UserMapper userMapper;
 
     @GetMapping
     public Result<List< User>> listUsers() {
@@ -56,5 +60,11 @@ public class UserController {
     public Result<User> testException() {
         int i = 1 / 0;
         return Result.success();
+    }
+
+    @GetMapping("/page")
+    public Result<PageResult<User>> page(Integer pageNum, Integer pageSize, String username) {
+        PageResult<User> pageResult = userService.page(pageNum, pageSize, username);
+        return Result.success(pageResult);
     }
 }

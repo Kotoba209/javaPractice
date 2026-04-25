@@ -1,5 +1,6 @@
 package com.example.demo1.service.impl;
 import com.example.demo1.mapper.UserMapper;
+import com.example.demo1.pojo.PageResult;
 import com.example.demo1.pojo.User;
 import com.example.demo1.service.UserService;
 import org.springframework.stereotype.Service;
@@ -39,5 +40,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Integer id) {
         userMapper.deleteById(id);
+    }
+
+    @Override
+    public PageResult<User> page(Integer pageNum, Integer pageSize, String username) {
+        Integer offset = (pageNum - 1) * pageSize;
+        long total = userMapper.count(username);
+        List<User> items = userMapper.page(offset, pageSize, username);
+        return new PageResult<>(total, items);
     }
 }

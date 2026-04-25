@@ -1,4 +1,5 @@
 package com.example.demo1.service;
+import com.example.demo1.pojo.PageResult;
 import com.example.demo1.pojo.User;
 
 import java.util.List;
@@ -13,6 +14,8 @@ public interface UserService {
     User updateUser(User user);
 
     void deleteUser(Integer id);
+
+    PageResult< User> page(Integer pageNum, Integer pageSize, String username);
 }
 
 

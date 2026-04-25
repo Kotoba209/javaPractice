@@ -23,17 +23,17 @@ public class LoginController {
     public Result<Void> login(@RequestBody @Validated LoginInfo loginInfo, HttpSession session) {
         User user = userMapper.findUserByName(loginInfo.getUsername());
         if (user == null) {
-            throw new BusinessException("鐢ㄦ埛涓嶅瓨鍦?);
+            throw new BusinessException("用户不存在");
         }
         String password = userMapper.getPasswordByUsername(loginInfo.getUsername());
         if (!password.equals(loginInfo.getPassword())) {
-            throw new BusinessException("鐢ㄦ埛鍚嶆垨瀵嗙爜閿欒");
+            throw new BusinessException("用户名或密码错误");
         }
         if (user.getUsername().equals(loginInfo.getUsername()) && password.equals(loginInfo.getPassword())) {
             session.setAttribute("loginUser", loginInfo.getUsername());
             return Result.success();
         }
-        return Result.fail(400, "鐢ㄦ埛鍚嶆垨瀵嗙爜閿欒");
+        return Result.fail(400, "用户名或密码错误");
     }
 
     @PostMapping("/logout")

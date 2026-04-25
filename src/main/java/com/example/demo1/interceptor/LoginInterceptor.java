@@ -17,7 +17,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
         if (loginUser == null) {
             response.setContentType("application/json;charset=UTF-8");
-            Result<Void> result = Result.fail(401, "鏈櫥褰曪紝璇峰厛鐧诲綍");
+            Result<Void> result = Result.fail(401, "用户未登录");
             ObjectMapper objectMapper = new ObjectMapper();
             response.getWriter().write(objectMapper.writeValueAsString(result));
             return false;

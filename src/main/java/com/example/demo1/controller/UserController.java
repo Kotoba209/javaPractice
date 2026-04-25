@@ -1,7 +1,5 @@
 package com.example.demo1.controller;
 
-//import com.example.demo1.mapper.UserMapper;
-
 import com.example.demo1.pojo.PageResult;
 import com.example.demo1.pojo.Result;
 import com.example.demo1.pojo.User;
@@ -10,11 +8,19 @@ import com.example.demo1.service.UserService;
 import com.example.demo1.validation.AddGroup;
 import com.example.demo1.validation.UpdateGroup;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import jakarta.validation.constraints.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -24,8 +30,6 @@ import java.util.List;
 public class UserController {
     @Autowired
     private UserService userService;
-//    @Autowired
-//    private UserMapper userMapper;
 
     @GetMapping
     public Result<List<User>> listUsers() {
@@ -70,7 +74,7 @@ public class UserController {
     @GetMapping("/page")
     public Result<PageResult<User>> page(
             @RequestParam @Min(value = 1, message = "页码不能小于1") Integer pageNum,
-            @RequestParam @Min(value = 1, message = "页大小不能小于1") @Max(value = 20, message = "页大小不能大于20") Integer pageSize,
+            @RequestParam @Min(value = 1, message = "每页大小不能小于1") @Max(value = 20, message = "每页大小不能大于20") Integer pageSize,
             @RequestParam(required = false) String username,
             @RequestParam(required = false) String nickname,
             @RequestParam(required = false, defaultValue = "asc") String sort) {

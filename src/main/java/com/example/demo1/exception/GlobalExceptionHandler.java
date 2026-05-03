@@ -4,9 +4,11 @@ import com.example.demo1.pojo.Result;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 import java.util.stream.Collectors;
 
@@ -57,5 +59,19 @@ public class GlobalExceptionHandler {
     public Result<Void> handleException(Exception e) {
         e.printStackTrace();
         return Result.fail("Server error: " + e.getMessage());
+    }
+
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public Result<Void> handleHandlerMethodValidationException(HandlerMethodValidationException e) {
+        String message = e.getParameterValidationResults().stream()
+                .flatMap(result -> result.getResolvableErrors().stream()
+                        .map(error -> result.getMethodParameter().getParameterName() + ":" + error.getDefaultMessage()))
+                .collect(Collectors.joining(","));
+        return Result.fail(400, "Validation failed: " + message);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public Result<Void> handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {
+        return Result.fail(400, "Missing parameter: " + e.getParameterName());
     }
 }

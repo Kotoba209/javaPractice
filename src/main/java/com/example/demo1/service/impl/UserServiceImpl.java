@@ -68,7 +68,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public PageResult<User> page(Integer pageNum, Integer pageSize, String username, String nickname, String sort) {
-        if (!sort.equalsIgnoreCase("desc") && !sort.equalsIgnoreCase("asc")) {
+        String normalizedSort = sort == null ? "asc" : sort.toLowerCase();
+        if (!normalizedSort.equals("asc") && !normalizedSort.equals("desc")) {
             throw new BusinessException("排序参数只能是 asc 或 desc");
         }
         Integer offset = (pageNum - 1) * pageSize;

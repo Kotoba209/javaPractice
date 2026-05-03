@@ -10,7 +10,7 @@ import com.example.demo1.validation.UpdateGroup;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,8 +28,12 @@ import java.util.List;
 @RequestMapping("/users")
 @Validated
 public class UserController {
-    @Autowired
+//    @Autowired
     private UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
     public Result<List<User>> listUsers() {
@@ -38,7 +42,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public Result<User> getById(@PathVariable @Validated Integer id) {
+    public Result<User> getById(@PathVariable @Validated @Min(value = 1, message = "id不能小于1") Integer id) {
         User user = userService.getById(id);
         return Result.success(user);
     }
@@ -60,7 +64,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public Result<Void> deleteUser(@PathVariable @Validated Integer id) {
+    public Result<Void> deleteUser(@PathVariable @Validated @Min(value = 1, message = "id不能小于1") Integer id) {
         userService.deleteUser(id);
         return Result.success();
     }

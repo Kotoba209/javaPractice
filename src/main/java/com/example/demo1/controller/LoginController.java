@@ -29,11 +29,8 @@ public class LoginController {
         if (!password.equals(loginInfo.getPassword())) {
             throw new BusinessException("用户名或密码错误");
         }
-        if (user.getUsername().equals(loginInfo.getUsername()) && password.equals(loginInfo.getPassword())) {
-            session.setAttribute("loginUser", loginInfo.getUsername());
-            return Result.success();
-        }
-        return Result.fail(400, "用户名或密码错误");
+        session.setAttribute("loginUser", loginInfo.getUsername());
+        return Result.success();
     }
 
     @PostMapping("/logout")
